@@ -326,6 +326,11 @@ module.exports = async (args: BootstrapArgs) => {
   })
   activity.end()
 
+  activity = report.activityTimer(`update site page schema`)
+  activity.start()
+  await require(`../schema/update`)()
+  activity.end()
+
   activity = report.activityTimer(`onPreExtractQueries`)
   activity.start()
   await apiRunnerNode(`onPreExtractQueries`)
@@ -358,12 +363,6 @@ module.exports = async (args: BootstrapArgs) => {
   activity = report.activityTimer(`write out redirect data`)
   activity.start()
   await writeRedirects()
-  activity.end()
-
-  // Update Schema for SitePage.
-  activity = report.activityTimer(`update schema`)
-  activity.start()
-  await require(`../schema`)()
   activity.end()
 
   const checkJobsDone = _.debounce(resolve => {
